@@ -2,38 +2,57 @@ const enteredData = document.getElementById('entered-data');
 const calculate = document.getElementById('calculate');
 const output = document.getElementById('output');
 
-function fact(n) { //Знаходить n!
-  if (n == 0){
-    return 1;
-  }
-  return (n != 1) ? n * fact(n - 1) : 1;
-}
-    
-function calculatePascal(arr){
-  alert('boom');
-  //const arr = [1, 6, 15, 20];
-  if(arr[0] === arr[arr.length - 1] || arr[0] !== 1){
-    alert("It's full row");
-    output.innerHTML = -1;
-  } else {
-  const n = arr[1];
-  const k = arr.length;
-  console.log(k);
-  let nextPasc = fact(n)/(fact(k)*fact(n-k));
-  console.log(nextPasc);
-  output.innerHTML = nextPasc;
-  }
-}
-
-
-calculate.addEventListener('click', arraySplit = () => {
+calculate.addEventListener('click', arraSplit = () => {
   output.innerHTML = '';
-  if (enteredData.value === ""){
+  getData(enteredData.value);
+});
+
+function getData(data){
+  if (data === ""){
     alert("Enter data please");
   } else {
     const arr = enteredData.value.split(' ');
-    let arrN = arr.map(Number);
-    console.dir(arrN);
-    calculatePascal(arrN);
+    let inputArr = arr.map(Number);
+    calculatePascal(inputArr);
   }
-});
+}
+
+function outputData(triangle, arr){
+  output.innerHTML = triangle[triangle.length - 1][arr.length];
+}
+
+function outputDataSecond(triangle, arr){
+  let sumRepeat;
+  for(let i  = 0; i < triangle.length; i++){
+    sumRepeat = 0;
+    for(let j = 0; j < arr.length; j++){
+      if(triangle[i][j] === arr[j]){
+       sumRepeat++
+      }
+      if(sumRepeat === arr.length){
+        output.innerHTML = triangle[i][arr.length];
+      }
+    }
+  }
+}
+
+function calculatePascal(arr){
+  if(arr[0] === arr[arr.length - 1] || arr[0] !== 1){   //Перевірка чи не введено вже повний рядок або чи не введено його з помилкою
+    output.innerHTML = -1;
+  } else {
+      let triangle = [[1], [1, 1]];
+      const n = arr[1];                                 //Знаходимо кількість рядків трикутника
+      for(let j = 1; j < n; j++){
+        var array = [];                                          
+        for(let k = 1; k <= j; k++){ 
+          var nextElement = triangle[j][k-1]+triangle[j][k];
+          array.push(nextElement);
+        }
+        array.push(1);
+        array.unshift(1);
+        triangle.push(array);                                     
+      }
+      //  outputData(triangle, arr);
+      outputDataSecond(triangle, arr);
+  }
+}
